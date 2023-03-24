@@ -2,6 +2,7 @@ import { Button, Textarea } from "@geist-ui/core";
 
 import styled from "@emotion/styled"
 import classNames from "classnames";
+import { Container } from "@/component/Container";
 
 export default function Home() {
   return (
@@ -38,9 +39,9 @@ export default function Home() {
             'gap-y-4',)}
           
           method="POST"
-          action="/api/todolist"
+          action="/post"
         >
-          <Textarea placeholder="id" className={classNames(
+          <Textarea placeholder="author" className={classNames(
             'text-white',
           )} />
 
@@ -64,11 +65,3 @@ export default function Home() {
     </Container>
   )
 }
-const Container = styled.div({
-  maxWidth: '1248px',
-  minWidth: '368px',
-  marginLeft: 'auto',
-  marginRight: 'auto',
-  padding: '0 24px',
-  boxSizing: 'border-box',
-});
