@@ -3,24 +3,51 @@ import { Button, Textarea } from '@geist-ui/core';
 import styled from '@emotion/styled';
 import classNames from 'classnames';
 import { Container } from '@/component/Container';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
+import { type } from 'os';
+import Link from 'next/link';
+
+type Formdata = {
+  author: string;
+  title: string;
+  content: string;
+};
 
 export default function Home() {
-  const [author, setAuthor] = useState<string>('');
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
+  const [formdata, setFormData] = useState<Formdata>({
+    author: '',
+    title: '',
+    content: '',
+  });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setFormData({
+      ...formdata,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const data = {
-      author,
-      title,
-      content,
-    };
+    console.log(formdata);
 
-    console.log(data);
+    try {
+      const res = await axios({
+        url: 'http://localhost:8080/post',
+        method: 'post',
+        data: formdata,
+      });
+
+      console.log("결과 : ", res);
+    } catch (e) {
+      console.log(e);
+    }
+
   };
+
   return (
     <Container
       className={classNames(
@@ -44,9 +71,15 @@ export default function Home() {
           'items-center'
         )}
       >
-        <span className={classNames('font-black', 'text-6xl', 'text-gray-200')}>
-          DODOFIN
-        </span>
+        <Link href='/post'>
+          <span className={classNames('font-black', 'text-6xl', 'text-gray-200',
+            'hover:opacity-80',
+            'hover:cursor-pointer',)}
+          >
+            DODOFIN
+          </span>
+        </Link>
+
       </div>
 
       <div>
@@ -64,38 +97,34 @@ export default function Home() {
           <Textarea
             placeholder="author"
             name="author"
-            value={author}
-            onChange={(e) => {
-              setAuthor(e.target.value);
-            }}
+            value={formdata.author}
+            onChange={handleChange}
             className={classNames('text-white')}
           />
 
           <Textarea
             placeholder="title"
             name="title"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
+            value={formdata.title}
+            onChange={handleChange}
             className={classNames('text-white')}
           />
 
           <Textarea
             placeholder="content"
             name="content"
-            value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
+            value={formdata.content}
+            onChange={handleChange}
             className={classNames('text-white')}
           />
           <Button
             type="error"
             onClick={() => {
-              setAuthor('');
-              setTitle('');
-              setContent('');
+              setFormData({
+                author: '',
+                title: '',
+                content: '',
+              });
             }}
           >
             초기화
@@ -103,24 +132,31 @@ export default function Home() {
 
           <input
             type="submit"
-            value="백엔드로"
+            value="등록"
             className={classNames(
               'w-full',
 
-              'border',
-              'border-gray-500',
+              'border-2',
+              'border-gray-400',
+              'bg-gray-400',
               'text-white',
 
               'p-2',
-              'font-extralight',
+              'font-light',
               'text-sm',
-              'rounded-md'
+              'rounded-md',
+
+              'hover:cursor-pointer',
+              'hover:bg-inherit',
+
+              'transition',
+              'hover:ease-in',
+              'hover:duration-100'
+
             )}
           />
         </form>
       </div>
-
-      <div>{/* 투두리스트 폼 */}</div>
     </Container>
   );
 }
