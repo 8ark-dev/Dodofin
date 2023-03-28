@@ -1,12 +1,9 @@
 import { Container } from '@/component/Container';
-import { Button, Collapse, Fieldset, Link, Text } from '@geist-ui/core';
-import { ArrowRight } from '@geist-ui/icons';
+import { Button, Collapse, Fieldset, Link } from '@geist-ui/core';
+import { ArrowRight, Edit3, Trash2 } from '@geist-ui/icons';
 import classNames from 'classnames';
-import { useRouter } from 'next/router';
 
 export default function Page() {
-  const router = useRouter();
-  const { postid } = router.query;
   return (
     <Container
       className={classNames(
@@ -70,10 +67,33 @@ export default function Page() {
           'text-md'
         )}
       >
-        <Collapse shadow title={`${postid}`} subtitle="author" width={100}>
+        <Collapse shadow title='test' subtitle="author" width={100}>
           <Fieldset>
-            <Fieldset.Title>제목입니다.</Fieldset.Title>
-            <Fieldset.Subtitle>내용입니다.</Fieldset.Subtitle>
+            <div className={classNames(
+              'w-full',
+
+              'flex',
+              'justify-between',
+              'items-center',
+
+              'gap-x-2',
+            )}>
+
+              <Fieldset.Title>제목입니다.</Fieldset.Title>
+              <div className={classNames('gap-x-2', 'w-1/2',
+                'flex',
+                'justify-end',
+                'items-center'
+
+              )}>
+
+                <Button icon={<Edit3 />} width={'3%'} />
+                <Button icon={<Trash2 />} width={'3%'} />
+              </div>
+            </div>
+            <div>
+              <Fieldset.Subtitle>내용입니다.</Fieldset.Subtitle>
+            </div>
           </Fieldset>
         </Collapse>
       </div>
