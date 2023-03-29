@@ -36,7 +36,7 @@ export default function Home() {
 
     try {
       const res = await axios({
-        url: 'http://localhost:8080/post',
+        url: '/',
         method: 'post',
         data: formdata,
       });
