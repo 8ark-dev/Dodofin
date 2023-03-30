@@ -31,19 +31,20 @@ export default function Home() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    console.log(formdata);
-
     try {
       const res = await axios({
-        url: '/',
+        url: 'http://localhost:8000/post',
         method: 'post',
-        data: formdata,
+        data: {
+          'id': formdata.author,
+          'title': formdata.title,
+          'content': formdata.content,
+        },
       });
 
-      console.log("결과 : ", res);
+      window.location.href = '/post';
     } catch (e) {
-      console.log(e);
+      alert(e);
     }
 
   };
@@ -160,3 +161,5 @@ export default function Home() {
     </Container>
   );
 }
+
+
