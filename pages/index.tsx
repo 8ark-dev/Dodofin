@@ -28,17 +28,16 @@ export default function Home() {
     });
   };
 
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await axios({
-        url: 'http://localhost:8000/post',
+        url: 'http://localhost:8080/post',
         method: 'post',
         data: {
-          'id': formdata.author,
-          'title': formdata.title,
-          'content': formdata.content,
+          id: formdata.author,
+          title: formdata.title,
+          content: formdata.content,
         },
       });
 
@@ -46,7 +45,6 @@ export default function Home() {
     } catch (e) {
       alert(e);
     }
-
   };
 
   return (
@@ -72,15 +70,19 @@ export default function Home() {
           'items-center'
         )}
       >
-        <Link href='/post'>
-          <span className={classNames('font-black', 'text-6xl', 'text-gray-200',
-            'hover:opacity-80',
-            'hover:cursor-pointer',)}
+        <Link href="/post">
+          <span
+            className={classNames(
+              'font-black',
+              'text-6xl',
+              'text-gray-200',
+              'hover:opacity-80',
+              'hover:cursor-pointer'
+            )}
           >
             DODOFIN
           </span>
         </Link>
-
       </div>
 
       <div>
@@ -153,7 +155,6 @@ export default function Home() {
               'transition',
               'hover:ease-in',
               'hover:duration-100'
-
             )}
           />
         </form>
@@ -161,5 +162,3 @@ export default function Home() {
     </Container>
   );
 }
-
-
