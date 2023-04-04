@@ -8,23 +8,6 @@ import classNames from 'classnames';
 
 export default function Page() {
   const [post, setPost] = useState<any[]>([]);
-  const [id, setId] = useState<string>('');
-
-  const deletePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    const res = await axios({
-      url: 'http://localhost:8080/post',
-      method: 'delete',
-      data: {
-        id: id,
-      }
-    }).then(
-      (res) => {
-        console.log(res);
-        alert('complete');
-      }).catch((e) => {
-        console.log(e);
-      });
-  }
   
   useEffect(() => {
     async function getPost() {
@@ -130,9 +113,24 @@ export default function Page() {
 
                     <Button icon={<Edit3 />} width={'3%'} />
                     <Button icon={<Trash2 />} width={'3%'} onClick={() => {
-                      setId(v.id);
-                      deletePost;
-                      alert('asd');
+                      (async () => {
+                        const res = await axios({
+                          url: 'http://localhost:8080/post',
+                          method: 'delete',
+                          data: {
+                            id: v.id,
+                          },
+                        }).then(
+                          (res) => {
+                            alert('삭제완료');
+                            window.location.href = '/post';
+                          }
+                        )
+                          .catch((e) => {
+                            console.log(e);
+                          });
+                      }
+                      )();
                     }} />
                   </div>
                 </div>
