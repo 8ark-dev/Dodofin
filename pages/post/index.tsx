@@ -1,9 +1,49 @@
 import { Container } from '@/component/Container';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+
 import { Button, Collapse, Fieldset, Link } from '@geist-ui/core';
 import { ArrowRight, Edit3, Trash2 } from '@geist-ui/icons';
 import classNames from 'classnames';
 
 export default function Page() {
+  const [post, setPost] = useState<any[]>([]);
+  const [id, setId] = useState<string>('');
+
+  const deletePost = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    const res = await axios({
+      url: 'http://localhost:8080/post',
+      method: 'delete',
+      data: {
+        id: id,
+      }
+    }).then(
+      (res) => {
+        console.log(res);
+        alert('complete');
+      }).catch((e) => {
+        console.log(e);
+      });
+  }
+  
+  useEffect(() => {
+    async function getPost() {
+      const res = await axios({
+        url: 'http://localhost:8080/post',
+        method: 'get',
+      }).then(
+        (res) => {
+          setPost(res.data);
+        }
+      )
+        .catch((e) => {
+          console.log(e);
+        });
+    }
+    getPost();
+    console.log(post);
+  }, []);
+
   return (
     <Container
       className={classNames(
@@ -53,50 +93,57 @@ export default function Page() {
       >
         <div>게시판</div>
       </div>
-
-      <div
-        className={classNames(
-          'w-full',
-          'h-full',
-
-          'flex',
-          'justify-start',
-          'items-start',
-
-          'font-light',
-          'text-md'
-        )}
-      >
-        <Collapse shadow title='test' subtitle="author" width={100}>
-          <Fieldset>
-            <div className={classNames(
+      {
+        post.map((v, index) => (
+          <div key={index}
+            className={classNames(
               'w-full',
+              'h-full',
 
               'flex',
-              'justify-between',
-              'items-center',
+              'justify-start',
+              'items-start',
 
-              'gap-x-2',
-            )}>
+              'font-light',
+              'text-md'
+            )}
+          >
+            <Collapse shadow title={v.id} subtitle={v.title} width={100}>
+              <Fieldset>
+                <div className={classNames(
+                  'w-full',
 
-              <Fieldset.Title>제목입니다.</Fieldset.Title>
-              <div className={classNames('gap-x-2', 'w-1/2',
-                'flex',
-                'justify-end',
-                'items-center'
+                  'flex',
+                  'justify-between',
+                  'items-center',
 
-              )}>
+                  'gap-x-2',
+                )}>
 
-                <Button icon={<Edit3 />} width={'3%'} />
-                <Button icon={<Trash2 />} width={'3%'} />
-              </div>
-            </div>
-            <div>
-              <Fieldset.Subtitle>내용입니다.</Fieldset.Subtitle>
-            </div>
-          </Fieldset>
-        </Collapse>
-      </div>
+                  <Fieldset.Title>{v.title}</Fieldset.Title>
+                  <div className={classNames('gap-x-2', 'w-1/2',
+                    'flex',
+                    'justify-end',
+                    'items-center'
+
+                  )}>
+
+                    <Button icon={<Edit3 />} width={'3%'} />
+                    <Button icon={<Trash2 />} width={'3%'} onClick={() => {
+                      setId(v.id);
+                      deletePost;
+                      alert('asd');
+                    }} />
+                  </div>
+                </div>
+                <div>
+                  <Fieldset.Subtitle>{v.content}</Fieldset.Subtitle>
+                </div>
+              </Fieldset>
+            </Collapse>
+          </div>
+        ))
+      }
     </Container>
   );
 }

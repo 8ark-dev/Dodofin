@@ -98,7 +98,7 @@ export default function Home() {
           onSubmit={handleSubmit}
         >
           <Textarea
-            placeholder="author"
+            placeholder="id"
             name="author"
             value={formdata.author}
             onChange={handleChange}
