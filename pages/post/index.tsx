@@ -10,6 +10,10 @@ export default function Page() {
   const [post, setPost] = useState<any[]>([]);
   const [isedit, setIsedit] = useState<boolean>(false);
 
+  // 수정 데이터 저장
+  const [editTitle, setEditTitle] = useState<string>('');
+  const [editContent, setEditContent] = useState<string>('');
+
   useEffect(() => {
     async function getPost() {
       const res = await axios({
@@ -106,7 +110,12 @@ export default function Page() {
 
                   <Fieldset.Title>
                     {isedit ? (
-                      <input placeholder={v.title} disabled={false} className={classNames(
+                      <input placeholder={v.title} 
+                      onChange={(e) => {
+                        setEditTitle(e.target.value);
+                      }}
+                      disabled={false} 
+                      className={classNames(
                         'w-full',
                         'h-full',
 
@@ -127,7 +136,7 @@ export default function Page() {
 
                   )}>
 
-                    <Button icon={<Edit3 />} width={'3%'} onClick={() => setIsedit(!isedit)}/>
+                    <Button icon={<Edit3 />} width={'3%'} onClick={() => setIsedit(!isedit)} />
                     <Button icon={<Trash2 />} width={'3%'} onClick={() => {
                       (async () => {
                         const res = await axios({
@@ -151,11 +160,50 @@ export default function Page() {
                   </div>
                 </div>
                 <div className={classNames('my-5')}>
-                  <Fieldset.Subtitle>{v.content}</Fieldset.Subtitle>
+                  <Fieldset.Subtitle>
+                    {isedit ? (
+                      <input
+                        placeholder={v.content}
+                        disabled={false}
+                        onChange={(e) => {
+                          setEditContent(e.target.value);
+                        }}
+                        className={classNames(
+                          'w-full',
+                          'h-full',
+
+                          'bg-inherit',
+
+                          'border-0',
+                          'outline-none',
+
+                          'text-lg',
+                          'font-bold',
+                        )} />
+
+                    ) : v.content}
+                  </Fieldset.Subtitle>
                 </div>
-              {isedit && (
-                <Button width={'10%'}>저장</Button>
-              )}
+                {isedit && (
+                  <Button width={'10%'} onClick={
+                    (async () => {
+                      const res = await axios({
+                        url: 'http://localhost:8080/post',
+                        method: 'put',
+                        data: {
+                          id: v.id,
+                          title: editTitle,
+                          content: editContent,
+                        },
+                      }).then(
+                        (res) => {
+                          alert('수정완료');
+                          window.location.href = '/post';
+                        }).catch((e) => {
+                          console.log(e);
+                        });
+                    })}>저장</Button>
+                )}
               </Fieldset>
             </Collapse>
           </div>
