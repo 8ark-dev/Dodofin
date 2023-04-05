@@ -8,7 +8,8 @@ import classNames from 'classnames';
 
 export default function Page() {
   const [post, setPost] = useState<any[]>([]);
-  
+  const [isedit, setIsedit] = useState<boolean>(false);
+
   useEffect(() => {
     async function getPost() {
       const res = await axios({
@@ -103,7 +104,22 @@ export default function Page() {
                   'gap-x-2',
                 )}>
 
-                  <Fieldset.Title>{v.title}</Fieldset.Title>
+                  <Fieldset.Title>
+                    {isedit ? (
+                      <input placeholder={v.title} disabled={false} className={classNames(
+                        'w-full',
+                        'h-full',
+
+                        'bg-inherit',
+
+                        'border-0',
+                        'outline-none',
+
+                        'text-2xl',
+                        'font-bold',
+                      )} />
+                    ) : v.title}
+                  </Fieldset.Title>
                   <div className={classNames('gap-x-2', 'w-1/2',
                     'flex',
                     'justify-end',
@@ -111,7 +127,7 @@ export default function Page() {
 
                   )}>
 
-                    <Button icon={<Edit3 />} width={'3%'} />
+                    <Button icon={<Edit3 />} width={'3%'} onClick={() => setIsedit(!isedit)}/>
                     <Button icon={<Trash2 />} width={'3%'} onClick={() => {
                       (async () => {
                         const res = await axios({
@@ -134,9 +150,12 @@ export default function Page() {
                     }} />
                   </div>
                 </div>
-                <div>
+                <div className={classNames('my-5')}>
                   <Fieldset.Subtitle>{v.content}</Fieldset.Subtitle>
                 </div>
+              {isedit && (
+                <Button width={'10%'}>저장</Button>
+              )}
               </Fieldset>
             </Collapse>
           </div>
